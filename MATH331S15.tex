@@ -1,0 +1,196 @@
+% Oliver Jourmel
+% 567552674
+%
+%
+% MATH 331 Cryptography Course
+% Spring 2015
+%
+\documentclass[letterpaper,10pt,twoside]{report}
+
+% Document margins
+\topmargin=-2cm
+\textheight=24cm
+\textwidth=16cm
+\oddsidemargin=0cm
+\evensidemargin=0cm
+
+\setlength{\parindent}{0mm}
+
+% Packages
+\usepackage{booktabs}
+\usepackage{pifont}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{latexsym}
+\usepackage{enumerate}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{appendix}
+\usepackage{array}
+\usepackage[bf]{titlesec}
+
+\usepackage{todonotes}
+
+% Heading Formats
+\titleformat{\chapter}[display]
+{\sffamily\huge\bfseries}{Chapter \thechapter}{1ex}{}
+
+\titleformat{\section}
+{\sffamily\large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\sffamily\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\sffamily\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+
+% Custom Environments, Headings, and Symbols
+\newcounter{example}
+\newenvironment{example}
+{\underline{\sffamily\bfseries Example \theexample}\\}
+{\hspace*{\fill}$\bullet$ \stepcounter{example}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem*{fact}{Fact}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\len}{\mathrm{len}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\pagestyle{fancy}
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername \ \thechapter.\ #1}{}} 
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
+\fancyhead[LE,RO]{\sffamily\bfseries \rightmark}
+\fancyhead[LO,RE]{\sffamily\bfseries \leftmark}
+
+\setcounter{chapter}{0}
+\setcounter{definition}{1}
+\setcounter{example}{1}
+
+\chapter{Cryptography and Coding Theory}
+\section{Introduction}
+\subsection{Terminology}
+
+\begin{definition}{What is Crypt*}
+
+\begin{tabular}{ll}
+   Cryptology      & $ = $ the study of sending information over secure channels \\
+   Cryptography    & $ = $ methods used to design such \emph{Cryptosystems} \\
+   Cryptanalysis   & $ = $ methods used to attack or break \emph{Cryptosystems} \\
+   Cryptology      & $ = $ Cryptography $ + $ Cryptanalysis \\
+   & \\
+   Coding Theory   & $ = $ the study of replacing a set of input symbols \\
+                   & $ = $ study of sending information over noisy channels \\
+\end{tabular}
+
+\end{definition}
+
+\begin{definition}{Dramatis Personae}
+
+\begin{tabular}{ll}
+   Alice     & $ = $ a person who wishes to communicate with Bob. \\
+   Bob       & $ = $ a person who wishes to communicate with Alice. Bob is sometimes called Bill. \\
+   Eve       & $ = $ an easvesdropper; someone who wishes to intercept and decrypt message between Alice and Bob. \\
+   Oscar     & $ = $ a passive version of Eve. \\
+   Mallary   & $ = $ a malicious version of Eve. \\
+\end{tabular}
+
+\begin{fact}
+   The original message is referred to as \emph{plaintext}.
+\end{fact}
+
+\begin{fact}
+   The original message is referred to as \emph{ciphertext}.
+\end{fact}
+
+\todo{Figure}
+\end{definition}
+
+\begin{definition}{Kerckhoff's Principal (1833 ``La Cryptograph Militaire'')} \\
+``In assessing the security of a cryptosystems, one should always assume the enemy knows the method of encryption and decryption being used. The security must be based on a key, rather than the obscurity of the system.''
+\end{definition}
+
+Eve could potentially have one of the following goals:\\
+%\vspace{-1em}
+\begin{itemize}
+   \item{She wants read a message.}
+   \item{She wants to be able to read all messages sent with a certain key.}
+   \item{She wants to corrupt the message in such a way that Bob think he has received the message from Alice.}
+   \item{She wants to intercept all messages from Alice and perform man-in-the-middle-attack.}
+\end{itemize}
+
+\subsection{Cryptographic Attacks}
+\begin{definition}{\ } \\
+   There are four main types of cryptographic attacks:
+\begin{enumerate}
+   \item{Ciphertext only attack: \\ Eve has gained access to some ciphertext and uses only this information to determine the plaintext.}
+   \item{Known plaintext attack: \\ Eve has gained access to some plaintext and the corresponding ciphertext. She uses this to find the key, and decrypt all future messages sent with that key.}
+   \item{Chosen plaintext attack: \\ Eve temporarily gains access to an encryption machine and chooses some plaintext, generating the corresponding ciphertext.}
+   \item{Chosen ciphertext attack: \\ Eve temporarily gains access to a decryption machine and chooses some ciphertext, generating the corresponding plaintext.}
+\end{enumerate}
+\end{definition}
+
+\subsection{Keys}
+\begin{definition}{\ } \\
+   There are two main types of keys:
+\begin{enumerate}
+   \item{Symmetric Keys: \\ Alice and Bob each have both the encryption and decryption keys.}
+   \item{Public Key Cryptography: \\ Bob reviles the encryption key to Alice and anyone else. Only Bob would have the decryption key.}
+\end{enumerate}
+\end{definition}
+
+\section{Historical Ciphers}
+\subsection{Cesar Cipher (Substitution Cipher)}
+
+\begin{example}
+
+\begin{tabular}{c|*{26}{c@{\hspace{2.75mm}}}}
+   Plain  & A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q & R & S & T & U & V & W & X & Y & Z \\
+   Cipher & S & T & U & V & W & X & Y & Z & A & B & C & D & E & F & G & H & I & J & K & L & M & N & O & P & Q & R \\
+\end{tabular}
+
+\begin{fact}
+   Shift the alphabet by 8 slots: 8 is the key.
+\end{fact}
+
+\[\texttt{HI ERICA} \rightarrow \texttt{za wjaus} \rightarrow \texttt{zawjaus}\]
+
+\end{example}
+
+Leaving spaces in the cipher text leaves a clue as to the word structure. Similarly, punctuation marks should be left out.
+
+\subsection{The Beale Cipher}
+2ed cipher was cracked as a book cipher
+
+a book code
+\todo{insert example beale cipher}
+
+
+\subsection{Zodiac 340}
+
+serial killer write letters to police encrypted
+one was cracked using a substitution cipher
+
+\end{document}
+
