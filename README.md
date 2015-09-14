@@ -1,2 +1,2 @@
 # viu-math-cryptography
-A collection of the notes from MATH 331 2015
+A collection of notes from VIU Math 331 Spring 2015, Cryptography
